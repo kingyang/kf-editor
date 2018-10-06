@@ -38,5 +38,4 @@
         "grunt-module-dependence": "~0.1.1",
         "grunt-contrib-jshint": "~0.10.0"
     }
-
 }

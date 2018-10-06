@@ -1,9 +1,9 @@
 /*!
  * ====================================================
- * Kity Formula Render - v1.0.0 - 2014-07-30
+ * Kity Formula Render - v1.0.0 - 2018-10-06
  * https://github.com/kitygraph/formula
  * GitHub: https://github.com/kitygraph/formula.git 
- * Copyright (c) 2014 Baidu Kity Group; Licensed MIT
+ * Copyright (c) 2018 Baidu Kity Group; Licensed MIT
  * ====================================================
  */
 
@@ -37,6 +37,7 @@ var _p = {
     }
 };
 
+//src/base/canvg.js
 /*!
  * canvg库封装
  * canvg官网： https://code.google.com/p/canvg/
@@ -3243,6 +3244,7 @@ _p[0] = {
     }
 };
 
+//src/base/output.js
 /*!
  * 输出转换器，提供输出支持
  */
@@ -3270,7 +3272,7 @@ _p[1] = {
         }
         function getBase64DataURL(doc, data, type, cb) {
             var canvas = null, args = arguments, ctx = null;
-            if (true) {
+            if (!isChromeCore()) {
                 drawToCanvas.apply(null, args);
             } else {
                 canvas = getImageCanvas(doc, data.width, data.height, type);
@@ -3308,16 +3310,20 @@ _p[1] = {
         function drawToCanvas(doc, data, type, cb) {
             var canvas = getImageCanvas(doc, data.width, data.height, type);
             canvas.style.cssText = "position: absolute; top: 0; left: 100000px; z-index: -1;";
+            doc.body.appendChild(canvas);
+            canvg(canvas, data.content);
+            doc.body.removeChild(canvas);
             window.setTimeout(function() {
-                doc.body.appendChild(canvas);
-                canvg(canvas, data.content);
-                doc.body.removeChild(canvas);
                 cb(canvas.toDataURL(type));
-            }, 0);
+            }, 50);
+        }
+        function isChromeCore() {
+            return window.navigator.userAgent.indexOf("Chrome") !== -1;
         }
     }
 };
 
+//src/char/char-list.js
 /*!
  * 所有字符的列表
  */
@@ -3327,6 +3333,7 @@ _p[2] = {
     }
 };
 
+//src/char/conf.js
 /*!
  * 字符配置
  */
@@ -3339,6 +3346,7 @@ _p[3] = {
     }
 };
 
+//src/char/text-factory.js
 /*!
  * 工厂方法，创建兼容各浏览器的text实现
  */
@@ -3373,6 +3381,7 @@ _p[4] = {
     }
 };
 
+//src/char/text.js
 /**
  * 文本
  */
@@ -3430,6 +3439,7 @@ _p[5] = {
                     }
                     var data = FontManager.getCharacterValue(input, fontFamily);
                     if (!data) {
+                        console.error("missing code: " + input);
                         return "";
                     }
                     return data;
@@ -3439,6 +3449,7 @@ _p[5] = {
     }
 };
 
+//src/def/gtype.js
 /**
  * 定义公式中各种对象的类型
  */
@@ -3453,6 +3464,7 @@ _p[6] = {
     }
 };
 
+//src/def/script-type.js
 /**
  * 定义公式中上下标的类型
  */
@@ -3465,6 +3477,7 @@ _p[7] = {
     }
 };
 
+//src/expression/compound-exp/binary-exp/subscript.js
 /**
  * 下标表达式
  */
@@ -3481,6 +3494,7 @@ _p[8] = {
     }
 };
 
+//src/expression/compound-exp/binary-exp/superscript.js
 /**
  * 上标表达式
  */
@@ -3497,6 +3511,7 @@ _p[9] = {
     }
 };
 
+//src/expression/compound-exp/binary.js
 /**
  * 二元操作表达式
  */
@@ -3526,6 +3541,7 @@ _p[10] = {
     }
 };
 
+//src/expression/compound-exp/brackets.js
 /**
  * 自动增长括号表达式
  */
@@ -3566,6 +3582,7 @@ _p[11] = {
     }
 };
 
+//src/expression/compound-exp/combination.js
 /**
  * 组合表达式
  * 可以组合多个表达式
@@ -3614,6 +3631,7 @@ _p[12] = {
     }
 };
 
+//src/expression/compound-exp/fraction.js
 /**
  * 分数表达式
  */
@@ -3640,6 +3658,7 @@ _p[13] = {
     }
 };
 
+//src/expression/compound-exp/func.js
 /**
  * 函数表达式
  */
@@ -3681,6 +3700,7 @@ _p[14] = {
     }
 };
 
+//src/expression/compound-exp/integration.js
 /**
  * 积分表达式
  */
@@ -3724,6 +3744,7 @@ _p[15] = {
     }
 };
 
+//src/expression/compound-exp/radical.js
 /**
  * 方根表达式
  */
@@ -3758,6 +3779,7 @@ _p[16] = {
     }
 };
 
+//src/expression/compound-exp/script.js
 /**
  * 上标表达式
  */
@@ -3787,6 +3809,7 @@ _p[17] = {
     }
 };
 
+//src/expression/compound-exp/summation.js
 /**
  * 求和表达式
  */
@@ -3822,6 +3845,7 @@ _p[18] = {
     }
 };
 
+//src/expression/compound.js
 /**
  * 复合表达式
  * @abstract
@@ -3890,6 +3914,7 @@ _p[19] = {
     }
 };
 
+//src/expression/empty.js
 /**
  * 空表达式
  * 该表达式主要用途是用于站位
@@ -3924,6 +3949,7 @@ _p[20] = {
     }
 };
 
+//src/expression/expression.js
 /**
  * 基础表达式， 该类是表达式和操作数的高层抽象
  * @abstract
@@ -4060,6 +4086,7 @@ _p[21] = {
     }
 };
 
+//src/expression/text.js
 /**
  * Text表达式
  */
@@ -4101,6 +4128,7 @@ _p[22] = {
     }
 };
 
+//src/font/checker-tpl.js
 /*!
  * 字体信息检测模板，用于检测浏览器的字体信息
  */
@@ -4110,12 +4138,13 @@ _p[23] = {
     }
 };
 
+//src/font/installer.js
 /*!
  * 字体安装器
  */
 _p[24] = {
     value: function(require) {
-        var kity = _p.r(34), FontManager = _p.r(25), $ = _p.r(33), FONT_CONF = _p.r(47).font, CHAR_LIST = _p.r(2), NODE_LIST = [];
+        var kity = _p.r(34), FontManager = _p.r(25), FONT_CONF = _p.r(47).font, CHAR_LIST = _p.r(2), NODE_LIST = [];
         return kity.createClass("FontInstaller", {
             constructor: function(doc, resource) {
                 this.callBase();
@@ -4145,10 +4174,8 @@ _p[24] = {
             }
         });
         function preload(doc, fontInfo, callback) {
-            $.get(fontInfo.meta.src, function(data, state) {
-                if (state === "success") {
-                    applyFonts(doc, fontInfo);
-                }
+            window.fetch(fontInfo.meta.src).then(function() {
+                applyFonts(doc, fontInfo);
                 callback();
             });
         }
@@ -4201,6 +4228,7 @@ _p[24] = {
     }
 };
 
+//src/font/manager.js
 /*!
  * 字体管理器
  */
@@ -4227,6 +4255,7 @@ _p[25] = {
     }
 };
 
+//src/font/map/kf-ams-bb.js
 /*!
  * 双线字体
  */
@@ -4241,6 +4270,7 @@ _p[26] = {
     }
 };
 
+//src/font/map/kf-ams-cal.js
 /*!
  * 手写体
  */
@@ -4255,6 +4285,7 @@ _p[27] = {
     }
 };
 
+//src/font/map/kf-ams-frak.js
 /*!
  * 花体
  */
@@ -4269,6 +4300,7 @@ _p[28] = {
     }
 };
 
+//src/font/map/kf-ams-main.js
 /*!
  * 字体主文件
  */
@@ -4700,6 +4732,7 @@ _p[29] = {
     }
 };
 
+//src/font/map/kf-ams-roman.js
 /*!
  * 罗马字体
  */
@@ -4714,6 +4747,7 @@ _p[30] = {
     }
 };
 
+//src/formula.js
 /**
  * 公式对象，表达式容器
  */
@@ -4802,7 +4836,7 @@ _p[31] = {
                 this.insertExpression(expression, this.expressions.length);
             },
             resize: function() {
-                var renderBox = this.container.getRenderBox("paper");
+                var renderBox = this.container.getFixRenderBox();
                 this.node.setAttribute("width", renderBox.width);
                 this.node.setAttribute("height", renderBox.height);
             },
@@ -4876,6 +4910,7 @@ _p[31] = {
     }
 };
 
+//src/fpaper.js
 /**
  * 公式专用paper
  */
@@ -4918,6 +4953,7 @@ _p[32] = {
     }
 };
 
+//src/jquery.js
 /**
  * jquery
  */
@@ -4930,6 +4966,7 @@ _p[33] = {
     }
 };
 
+//src/kity.js
 /**
  * kity库封包
  */
@@ -4942,6 +4979,7 @@ _p[34] = {
     }
 };
 
+//src/operator/brackets.js
 /**
  * 小括号操作符：()
  */
@@ -4970,6 +5008,7 @@ _p[35] = {
     }
 };
 
+//src/operator/combination.js
 /**
  * 组合操作符
  * 操作多个表达式组合在一起
@@ -5010,6 +5049,7 @@ _p[36] = {
     }
 };
 
+//src/operator/common/script-controller.js
 /*!
  * 上下标控制器
  */
@@ -5189,23 +5229,12 @@ _p[37] = {
                 sub.translate((space.width - subBox.width) / 2, targetBox.height);
                 target.translate((space.width - targetBox.width) / 2, 0);
                 return space;
-            },
-            applyUpDownScript: function(target, sup, sub) {
-                var supBox = sup.getFixRenderBox(), subBox = sub.getFixRenderBox(), targetBox = target.getFixRenderBox(), space = {
-                    width: Math.max(targetBox.width, supBox.width, subBox.width),
-                    height: supBox.height + subBox.height + targetBox.height,
-                    top: 0,
-                    bottom: 0
-                };
-                sup.translate((space.width - supBox.width) / 2, 0);
-                target.translate((space.width - targetBox.width) / 2, supBox.height);
-                sub.translate((space.width - subBox.width) / 2, supBox.height + targetBox.height);
-                return space;
             }
         });
     }
 };
 
+//src/operator/fraction.js
 /**
  * 分数操作符
  */
@@ -5239,6 +5268,7 @@ _p[38] = {
     }
 };
 
+//src/operator/func.js
 /**
  * 函数操作符
  */
@@ -5283,18 +5313,12 @@ _p[39] = {
         function generateOperator() {
             var opShape = new Text(this.funcName, "KF AMS ROMAN");
             this.addOperatorShape(opShape);
-            // 为操作符图形创建baseline和meanline方法
-            opShape.getBaseline = function() {
-                return opShape.getFixRenderBox().height;
-            };
-            opShape.getMeanline = function() {
-                return 0;
-            };
             return opShape;
         }
     }
 };
 
+//src/operator/integration.js
 /**
  * 积分操作符：∫
  */
@@ -5360,6 +5384,7 @@ _p[40] = {
     }
 };
 
+//src/operator/operator.js
 /**
  * 操作符抽象类
  * @abstract
@@ -5403,6 +5428,7 @@ _p[41] = {
     }
 };
 
+//src/operator/radical.js
 /**
  * 开方操作符
  */
@@ -5500,6 +5526,7 @@ _p[42] = {
     }
 };
 
+//src/operator/script.js
 /**
  * 上下标操作符
  */
@@ -5522,6 +5549,7 @@ _p[43] = {
     }
 };
 
+//src/operator/summation.js
 /**
  * 求和操作符：∑
  */
@@ -5569,6 +5597,7 @@ _p[44] = {
     }
 };
 
+//src/resource-manager.js
 /*!
  * 资源管理器
  * 负责管理资源的加载，并在资源ready之后提供Formula构造器
@@ -5619,6 +5648,7 @@ _p[45] = {
     }
 };
 
+//src/signgroup.js
 /*!
  * 所有符号的基类
  * @abstract
@@ -5664,6 +5694,7 @@ _p[46] = {
     }
 };
 
+//src/sysconf.js
 /*!
  * 系统项目配置文件.
  */
@@ -5686,13 +5717,14 @@ _p[47] = {
             func: {
                 // 上下标在函数名上下两侧的函数列表
                 "ud-script": {
-                    lim: true
+                    limit: true
                 }
             }
         };
     }
 };
 
+//dev-lib/start.js
 /*!
  * 启动代码
  */
